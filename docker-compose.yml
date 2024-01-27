@@ -1,0 +1,32 @@
+# DJANGO_SUPERUSER_USERNAME=regiapriandi DJANGO_SUPERUSER_PASSWORD=@Sinheul24. DJANGO_SUPERUSER_EMAIL=\"regiapriandi024@gmail.com\" python manage.py createsuperuser --noinput &&
+
+version: "3.9"
+
+services:
+  db:
+    image: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./data/db:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=regiapriandi
+      - POSTGRES_PASSWORD=@Sinheul24.
+  web:
+    build: .
+    command: >
+      sh -c "python manage.py makemigrations djangoBlogAmpApp &&
+             python manage.py migrate &&
+             python manage.py collectstatic --noinput &&
+             python manage.py runserver 0.0.0.0:8000"
+    volumes:
+      - .:/code
+    ports:
+      - "8000:8000"
+    environment:
+      - POSTGRES_NAME=postgres
+      - POSTGRES_USER=regiapriandi
+      - POSTGRES_PASSWORD=@Sinheul24.
+    depends_on:
+      - db
